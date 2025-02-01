@@ -283,7 +283,7 @@ graph TD
 ## 📸 Screenshots
 
 <div align="center">
-<img src="assets/Evaluation-advance-model.pngassets/screenshot1.png" width="400"/> <img src="assets/1.png" width="400"/>
+<img src="assets/Evaluation-advance-model.png" width="400"/> <img src="assets/1.png" width="400"/>
 </div>
 
 ## 📫 Contact
