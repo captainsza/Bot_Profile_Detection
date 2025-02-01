@@ -100,11 +100,61 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. Set up Frontend:
-```bash
-cd frontend
-npm install
-```
+## Additional Setup Instructions
+
+1. Create and activate a virtual environment (recommended):
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\Scripts\activate
+   ```
+
+2. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   Make sure to include packages like:
+   - transformers
+   - tensorflow
+   - scikit-learn
+   - nltk
+
+3. Download the NLTK VADER lexicon if not already available:
+   ```bash
+   python -c "import nltk; nltk.download('vader_lexicon')"
+   ```
+
+4. (Optional) Place or verify the model files in:
+   ```
+   frontend/
+     modal/
+       bot_detection_model.pkl
+       improved_bot_detection_model.h5
+       scaler.pkl
+       tokenizer/
+   ```
+
+5. Run the Next.js frontend:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+   This starts the development server at http://localhost:3000.
+
+6. Testing the endpoints:
+   - You can POST JSON input to /api/predict with fields like:
+     ```json
+     {
+       "Tweet": "Sample text",
+       "Retweet Count": "10",
+       "Mention Count": "2",
+       "Follower Count": "100",
+       "Verified": 0,
+       "Hashtags": "",
+       "model_version": "improved"
+     }
+     ```
+   - The Python script in predict.py will process the request and return a JSON response with predicted labels.
 
 ## 💻 Usage
 
@@ -198,12 +248,6 @@ graph TD
 - ApexCharts for visualizations
 - Framer Motion for animations
 
-## 🏆 Hackathon Achievement
-
-- 🥇 First Place Winner - Social Media Bot Detection Hackathon 2024
-- 🎯 Perfect score in scalability metrics
-- 💫 Special mention for UI/UX design
-- 🚀 Featured in MLOps Weekly
 
 ## 📈 Future Roadmap
 
@@ -221,9 +265,7 @@ graph TD
 4. Push to the branch
 5. Open a Pull Request
 
-## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
