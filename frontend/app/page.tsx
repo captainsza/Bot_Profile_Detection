@@ -16,14 +16,15 @@ export default function Home() {
     "Mention Count": 0,
     "Follower Count": 0,
     Verified: false,
-    Hashtags: ""
+    Hashtags: "",
+    model_version: "old" // default to the traditional model
   });
   
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value, type, checked } = e.target as HTMLInputElement;
     setFormData((prev) => ({
@@ -58,15 +59,21 @@ export default function Home() {
   // Generate a natural language explanation based on the result.
   const getExplanation = () => {
     if (!result) return "";
-    const { Predicted_Bot_Label, LR_Probability, Isolation_Forest_Pred } = result;
+    const { Predicted_Bot_Label, LR_Probability, Isolation_Forest_Pred, model_version } = result;
     const probabilityPercent = (LR_Probability * 100).toFixed(2);
     let explanation = "";
     if (Predicted_Bot_Label === 1) {
-      explanation = `Our analysis suggests that this account is likely automated. The logistic regression model assigned a bot probability of ${probabilityPercent}%, which exceeds our threshold. ${Isolation_Forest_Pred === 1 
-        ? "Additionally, our anomaly detection indicated unusual activity patterns." 
-        : "However, the anomaly detection did not find any unusual behavior."} This combination leads us to believe that the account is bot-operated.`;
+      explanation = `Our analysis suggests that this account is likely automated. ${
+        model_version === "old"
+          ? `The traditional model assigned a bot probability of ${probabilityPercent}%, ${Isolation_Forest_Pred === 1 ? "and the anomaly detector indicated unusual behavior." : "though the anomaly detector did not flag any irregular activity."}`
+          : `The improved model estimated a bot probability of ${probabilityPercent}%.`
+      }`;
     } else {
-      explanation = `The results indicate that this account is likely genuine. The logistic regression model estimated a bot probability of ${probabilityPercent}%, which is below our threshold. Also, the anomaly detection did not highlight any irregular activity. Overall, it appears that the account is human-operated.`;
+      explanation = `The results indicate that this account is likely genuine. ${
+        model_version === "old"
+          ? `The traditional model estimated a bot probability of ${probabilityPercent}% with no unusual activity detected.`
+          : `The improved model estimated a bot probability of ${probabilityPercent}%.`
+      }`;
     }
     return explanation;
   };
@@ -94,8 +101,8 @@ export default function Home() {
         }
       }
     },
-    labels: ["LR Probability"],
-    colors: ["#4ade80"] // A pleasant green color; adjust as needed.
+    labels: ["Bot Probability"],
+    colors: ["#4ade80"]
   };
 
   const chartSeries = result ? [Number((result.LR_Probability * 100).toFixed(2))] : [0];
@@ -137,7 +144,6 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Numeric inputs with modern styling */}
               {["Retweet Count", "Mention Count", "Follower Count"].map((field) => (
                 <div key={field}>
                   <label className="block text-sm font-medium mb-2 text-gray-300">
@@ -153,7 +159,6 @@ export default function Home() {
                   />
                 </div>
               ))}
-
               <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-800/50 border border-gray-700">
                 <input
                   id="Verified"
@@ -180,6 +185,21 @@ export default function Home() {
                 className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                 placeholder="#bot, #news"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-300">
+                Model Version
+              </label>
+              <select
+                name="model_version"
+                value={formData.model_version}
+                onChange={handleChange}
+                className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+              >
+                <option value="old">Traditional</option>
+                <option value="improved">Improved</option>
+              </select>
             </div>
 
             <motion.button
