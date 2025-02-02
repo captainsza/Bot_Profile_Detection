@@ -6,6 +6,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
 
 // Dynamically import Chart so that it only loads on the client side.
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -323,6 +324,55 @@ export default function Home() {
           )}
         </motion.div>
       </div>
+
+      {/* Footer Section */}
+      <footer className="w-full mt-16 border-t border-gray-800 pt-8 pb-4">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
+          <div className="flex flex-wrap justify-center gap-6 mb-4">
+            <Link 
+              href="https://qubitrules.com" 
+              target="_blank"
+              className="text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
+              Visit QubitRules
+            </Link>
+            <Link 
+              href="https://github.com/captainsza/Bot_Profile_Detection" 
+              target="_blank"
+              className="text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
+              GitHub Repository
+            </Link>
+            <Link 
+              href="/TechnicalDocumentation.pdf" 
+              target="_blank"
+              className="text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
+              Technical Documentation
+            </Link>
+          </div>
+          
+          <div className="text-center text-gray-400 text-sm">
+            <p>Powered by advanced machine learning and neural networks</p>
+            <p className="mt-2">
+              © {new Date().getFullYear()} QubitRules. All rights reserved.
+            </p>
+          </div>
+
+          <div className="flex items-center mt-4 space-x-2">
+            <Image
+              src="/logo-removebg.png"
+              alt="QubitRules Logo"
+              width={24}
+              height={24}
+              className="opacity-80"
+            />
+            <span className="text-sm text-gray-400">
+              Built with ❤️ by QubitRules Team
+            </span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

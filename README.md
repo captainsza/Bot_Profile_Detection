@@ -4,16 +4,42 @@
 
 ![Bot Detection Demo](assets/demo.gif)
 
-A cutting-edge system for detecting AI-powered bot accounts on social media platforms using dual model approaches. Winner of the Social Media Bot Detection Hackathon 2024.
+A cutting-edge system for detecting AI-powered bot accounts on social media platforms using dual model approaches.
+
+<div className="p-4 mb-8 bg-indigo-900/30 border-2 border-indigo-500/50 rounded-lg"></div>
+  <h2 className="text-xl font-bold mb-2">🌐 Live Demo Available!</h2>
+  <p>Try our bot detection system without any setup:</p>
+  <a href="http://202.71.184.6:3001/" target="_blank" rel="noopener noreferrer" 
+     className="text-lg font-bold text-indigo-400 hover:text-indigo-300">
+    👉 Launch Demo: http://202.71.184.6:3001/
+  </a>
+</div>
 
 [![Next.js](https://img.shields.io/badge/Next.js-13+-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.0+-orange?style=for-the-badge&logo=tensorflow)](https://tensorflow.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-[Live Demo](http://202.71.184.6:3001/) · [Documentation](docs/README.md)
+[Documentation](docs/README.md)
 
 </div>
+
+## 🚀 Quick Start
+
+### Option 1: Try the Live Demo (Recommended)
+No setup required! Visit our hosted demo:
+```
+🔗 http://202.71.184.6:3001/
+
+Features available:
+- Test both Traditional and Improved models
+- Real-time analysis
+- Instant results visualization
+- No installation needed
+```
+
+### Option 2: Local Installation
+If you prefer to run locally, follow our [installation guide](#installation).
 
 ## 🎯 Problem Statement
 
@@ -25,7 +51,6 @@ Modern social media platforms face increasing challenges from sophisticated bot 
 
 Traditional rule-based detection methods often fail against these advanced bots. Our solution leverages state-of-the-art ML/DL techniques to identify automated accounts effectively.
 
-![Architecture Overview](assets/architecture.png)
 
 ## 🌟 Key Features
 
@@ -81,28 +106,102 @@ Bot_Profile_Detection/
 
 ## 🔧 Prerequisites
 
+- Windows 10 or 11
 - Python 3.10 or later (but below 3.13)
 - Node.js 16.0 or higher
-- npm or yarn package manager
+- Git
+- Visual Studio Code (recommended)
 
 ## 🚀 Installation
 
-### Local Development
+### Windows Setup (Recommended)
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/Bot_Profile_Detection.git
-cd Bot_Profile_Detection
+1. Install required software:
+   ```bash
+   # Install Python 3.10+ from https://www.python.org/downloads/
+   # Install Node.js 16+ from https://nodejs.org/
+   # Install Git from https://git-scm.com/download/win
+   ```
+
+2. Clone the repository:
+   ```bash
+   # Open Command Prompt or PowerShell
+   cd C:\Users\YourUsername\Documents
+   git clone https://github.com/yourusername/Bot_Profile_Detection.git
+   cd Bot_Profile_Detection
+   ```
+
+3. Set up Python environment:
+   ```bash
+   # Create and activate virtual environment
+   python -m venv venv
+   venv\Scripts\activate
+
+   # Install Python dependencies
+   pip install -r requirements.txt
+   
+   # Install NLTK data
+   python -c "import nltk; nltk.download('vader_lexicon')"
+   ```
+
+4. Install and start the frontend:
+   ```bash
+   # Navigate to frontend directory
+   cd frontend
+
+   # Install Node.js dependencies
+   npm install
+
+   # Start the development server
+   npm run dev
+   ```
+
+5. Access the application:
+   - Open your browser and visit: http://localhost:3000
+   - Test both traditional and improved models
+   - Use the example tweets provided in the interface
+
+### Troubleshooting Windows Installation
+
+1. **Python Path Issues**
+   ```bash
+   # Add Python to PATH if 'python' command not found
+   # Edit System Environment Variables -> Path -> Add
+   C:\Users\YourUsername\AppData\Local\Programs\Python\Python310\
+   C:\Users\YourUsername\AppData\Local\Programs\Python\Python310\Scripts\
+   ```
+
+2. **Node.js Dependencies**
+   ```bash
+   # If npm install fails, try:
+   npm cache clean --force
+   npm install --legacy-peer-deps
+   ```
+
+3. **Model Files**
+   ```bash
+   # Ensure model files are in the correct location
+   frontend/
+     modal/
+       bot_detection_model.pkl
+       improved_bot_detection_model.h5
+       scaler.pkl
+       tokenizer/
+   ```
+
+4. **Permission Issues**
+   ```bash
+   # Run PowerShell as Administrator
+   Set-ExecutionPolicy RemoteSigned
+   ```
+
+### Alternative: Use Live Demo
+If you encounter setup issues, use our hosted demo:
+```
+🔗 http://202.71.184.6:3001/
 ```
 
-2. Set up Python environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### Ubuntu Server Deployment
+### Ubuntu Server Deployment (Optional)
 
 1. Connect to your Ubuntu server:
 ```bash
