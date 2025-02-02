@@ -11,7 +11,7 @@ A cutting-edge system for detecting AI-powered bot accounts on social media plat
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.0+-orange?style=for-the-badge&logo=tensorflow)](https://tensorflow.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-[Demo](https://bot-detection-demo.vercel.app) · [Documentation](docs/README.md) · [API Reference](docs/API.md)
+[Demo](https://drive.google.com/file/d/1qGdTAKxxn5jDQ2275YJKORpcdi6V3hei/view?usp=sharing) · [Documentation](docs/README.md)
 
 </div>
 
