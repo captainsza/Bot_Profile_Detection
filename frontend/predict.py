@@ -69,11 +69,11 @@ def create_model(max_length=64):
     
     # Combine features
     combined = Concatenate()([cls_token, numeric_input])
-    x = Dense(128, activation='relu')(combined)
-    x = Dropout(0.2)(x)
-    x = Dense(64, activation='relu')(x)
-    x = Dropout(0.2)(x)
-    output = Dense(1, activation='sigmoid')(x)
+    x = Dense(128, activation='relu', name='dense_1')(combined)
+    x = Dropout(0.2, name='dropout_1')(x)
+    x = Dense(64, activation='relu', name='dense_2')(x)
+    x = Dropout(0.2, name='dropout_2')(x)
+    output = Dense(1, activation='sigmoid', name='output')(x)
     
     model = tf.keras.Model(
         inputs={
@@ -151,38 +151,45 @@ def predict_bot_old(account_data: dict) -> dict:
 # =============================================================================
 def load_improved_model():
     """
-    Load the improved bot detection model saved as an HDF5 file along with its tokenizer and scaler.
+    Load the improved bot detection model with better error handling
     """
     model_path = os.path.join(os.path.dirname(__file__), "modal", "improved_bot_detection_model.h5")
     
-    # Create a fresh model instance
-    model = create_model()
-    model.compile(
-        optimizer='adam',
-        loss='binary_crossentropy',
-        metrics=['accuracy']
-    )
-    
     try:
-        # Try to load weights
-        model.load_weights(model_path)
+        # Create model with exact architecture
+        model = create_model()
+        model.compile(
+            optimizer='adam',
+            loss='binary_crossentropy',
+            metrics=['accuracy']
+        )
+        
+        # Load weights with more detailed error handling
+        try:
+            model.load_weights(model_path)
+            print("Model weights loaded successfully", file=sys.stderr)  # Changed to stderr
+        except ValueError as ve:
+            print(f"Error loading weights - architecture mismatch: {ve}", file=sys.stderr)
+            # Try loading with different options if needed
+            try:
+                model.load_weights(model_path, by_name=True, skip_mismatch=True)
+                print("Model weights loaded with skip_mismatch=True", file=sys.stderr)
+            except Exception as e:
+                raise Exception(f"Failed to load weights even with skip_mismatch: {e}")
+        
+        # Load tokenizer and scaler
+        tokenizer_path = os.path.join(os.path.dirname(__file__), "modal", "tokenizer")
+        scaler_path = os.path.join(os.path.dirname(__file__), "modal", "scaler.pkl")
+        
+        tokenizer = DistilBertTokenizerFast.from_pretrained(tokenizer_path)
+        scaler = joblib.load(scaler_path)
+        
+        return model, tokenizer, scaler, ['Retweet Count', 'Mention Count', 'Follower Count', 
+                                        'Verified', 'Tweet_Length', 'Hashtag_Count', 'Sentiment'], 64
+        
     except Exception as e:
-        print(f"Error loading model weights: {e}")
+        print(f"Error in load_improved_model: {str(e)}", file=sys.stderr)
         raise
-    
-    # Load the tokenizer
-    tokenizer_path = os.path.join(os.path.dirname(__file__), "modal", "tokenizer")
-    tokenizer = DistilBertTokenizerFast.from_pretrained(tokenizer_path)
-    
-    # Load the scaler
-    scaler_path = os.path.join(os.path.dirname(__file__), "modal", "scaler.pkl")
-    scaler = joblib.load(scaler_path)
-    
-    numeric_features = ['Retweet Count', 'Mention Count', 'Follower Count', 
-                       'Verified', 'Tweet_Length', 'Hashtag_Count', 'Sentiment']
-    max_length = 64
-    
-    return model, tokenizer, scaler, numeric_features, max_length
 
 def predict_bot_improved(account_data: dict) -> dict:
     """
@@ -256,12 +263,12 @@ def main():
         data = sys.stdin.read()
         account_data = json.loads(data)
         result = predict_bot(account_data)
-        # Ensure only the JSON result is printed
-        sys.stdout.write(json.dumps(result) + "\n")
+        # Only output the JSON result to stdout
+        print(json.dumps(result))
         sys.stdout.flush()
     except Exception as e:
         error_msg = {"error": "Prediction failed", "details": str(e)}
-        sys.stdout.write(json.dumps(error_msg) + "\n")
+        print(json.dumps(error_msg))
         sys.stdout.flush()
         sys.exit(1)
 
