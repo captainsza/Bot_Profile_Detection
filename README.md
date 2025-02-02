@@ -9,9 +9,9 @@ A cutting-edge system for detecting AI-powered bot accounts on social media plat
 <div className="p-4 mb-8 bg-indigo-900/30 border-2 border-indigo-500/50 rounded-lg"></div>
   <h2 className="text-xl font-bold mb-2">🌐 Live Demo Available!</h2>
   <p>Try our bot detection system without any setup:</p>
-  <a href="http://202.71.184.6:3001/" target="_blank" rel="noopener noreferrer" 
+  <a href="https://bot.qubitrules.com/" target="_blank" rel="noopener noreferrer" 
      className="text-lg font-bold text-indigo-400 hover:text-indigo-300">
-    👉 Launch Demo: http://202.71.184.6:3001/
+    👉 Launch Demo: https://bot.qubitrules.com/
   </a>
 </div>
 
@@ -29,7 +29,7 @@ A cutting-edge system for detecting AI-powered bot accounts on social media plat
 ### Option 1: Try the Live Demo (Recommended)
 No setup required! Visit our hosted demo:
 ```
-🔗 http://202.71.184.6:3001/
+🔗 https://bot.qubitrules.com/
 
 Features available:
 - Test both Traditional and Improved models
@@ -198,7 +198,7 @@ Bot_Profile_Detection/
 ### Alternative: Use Live Demo
 If you encounter setup issues, use our hosted demo:
 ```
-🔗 http://202.71.184.6:3001/
+🔗 https://bot.qubitrules.com/
 ```
 
 ### Ubuntu Server Deployment (Optional)
@@ -240,7 +240,7 @@ pm2 start npm --name "bot-detection" -- start
 npm start
 ```
 
-The application will be available at `http://202.71.184.6:3001/`
+The application will be available at `https://bot.qubitrules.com/`
 
 ## Additional Setup Instructions
 
@@ -302,7 +302,7 @@ The application will be available at `http://202.71.184.6:3001/`
 
 ### Access Options
 
-1. **Live Demo**: Visit [http://202.71.184.6:3001/](http://202.71.184.6:3001/)
+1. **Live Demo**: Visit [https://bot.qubitrules.com/](https://bot.qubitrules.com/)
 
 2. **Local Development**:
 ```bash
@@ -321,7 +321,7 @@ npm run dev
 
 ```http
 # Live
-POST http://202.71.184.6:3001/api/predict
+POST https://bot.qubitrules.com/api/predict
 
 # Local Development
 POST http://localhost:3000/api/predict
