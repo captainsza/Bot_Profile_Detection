@@ -11,7 +11,7 @@ A cutting-edge system for detecting AI-powered bot accounts on social media plat
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.0+-orange?style=for-the-badge&logo=tensorflow)](https://tensorflow.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-[Demo](https://drive.google.com/file/d/1qGdTAKxxn5jDQ2275YJKORpcdi6V3hei/view?usp=sharing) · [Documentation](docs/README.md)
+[Live Demo](http://202.71.184.6:3001/) · [Documentation](docs/README.md)
 
 </div>
 
@@ -87,6 +87,8 @@ Bot_Profile_Detection/
 
 ## 🚀 Installation
 
+### Local Development
+
 1. Clone the repository:
 ```bash
 git clone https://github.com/yourusername/Bot_Profile_Detection.git
@@ -99,6 +101,47 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
+
+### Ubuntu Server Deployment
+
+1. Connect to your Ubuntu server:
+```bash
+ssh username@202.71.184.6
+```
+
+2. Install system dependencies:
+```bash
+sudo apt update
+sudo apt install python3-venv nodejs npm
+```
+
+3. Clone and setup the project:
+```bash
+git clone https://github.com/yourusername/Bot_Profile_Detection.git
+cd Bot_Profile_Detection
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+4. Install Node.js dependencies and build:
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+5. Start the production server:
+```bash
+# Using PM2 (recommended)
+npm install -g pm2
+pm2 start npm --name "bot-detection" -- start
+
+# Or using regular npm
+npm start
+```
+
+The application will be available at `http://202.71.184.6:3001/`
 
 ## Additional Setup Instructions
 
@@ -158,24 +201,31 @@ pip install -r requirements.txt
 
 ## 💻 Usage
 
-1. Start the frontend development server:
+### Access Options
+
+1. **Live Demo**: Visit [http://202.71.184.6:3001/](http://202.71.184.6:3001/)
+
+2. **Local Development**:
 ```bash
 cd frontend
 npm run dev
+# Access at http://localhost:3000
 ```
-
-2. Access the application at `http://localhost:3000`
 
 3. Enter profile data and select model version:
    - Traditional: Uses .pkl model for faster, lightweight predictions
    - Improved: Uses neural network for higher accuracy
 
-## 🔍 API Reference
+## 🔍 Currently deployed Reference
 
 ### Prediction Endpoint
 
 ```http
-POST /api/predict
+# Live
+POST http://202.71.184.6:3001/api/predict
+
+# Local Development
+POST http://localhost:3000/api/predict
 ```
 
 Request body:
@@ -248,6 +298,48 @@ graph TD
 - ApexCharts for visualizations
 - Framer Motion for animations
 
+## 🛠️ Deployment Notes
+
+### Server Requirements
+- Ubuntu 20.04 or later
+- Python 3.10+ (but below 3.13)
+- Node.js 16.0+
+- 4GB RAM minimum
+- 20GB storage
+
+### Common Issues
+
+1. **Model Loading Issues**
+   ```bash
+   # Fix permissions for model files
+   chmod 644 frontend/modal/*.{pkl,h5}
+   chmod 755 frontend/modal/tokenizer
+   ```
+
+2. **TensorFlow Warnings**
+   - Add to your environment:
+   ```bash
+   export TF_CPP_MIN_LOG_LEVEL='2'
+   ```
+
+3. **Port Configuration**
+   - Default port: 3001
+   - Configure in next.config.js:
+   ```js
+   module.exports = {
+     ...config,
+     port: 3001
+   }
+   ```
+
+### Monitoring
+
+Monitor your deployment using PM2:
+```bash
+pm2 status
+pm2 logs bot-detection
+pm2 monit
+```
 
 ## 📈 Future Roadmap
 
@@ -264,8 +356,6 @@ graph TD
 3. Commit your changes
 4. Push to the branch
 5. Open a Pull Request
-
-
 
 ## 🙏 Acknowledgments
 
