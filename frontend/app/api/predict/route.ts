@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // frontend/app/api/predict/route.ts
 import { NextResponse } from "next/server";
 import { spawn } from "child_process";
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<Response> {
   try {
     const body = await request.json();
     const inputData = JSON.stringify(body);
@@ -20,7 +19,7 @@ export async function POST(request: Request) {
     pythonProcess.stdin.write(inputData);
     pythonProcess.stdin.end();
 
-    return new Promise((resolve) => {
+    return new Promise<Response>((resolve) => {
       pythonProcess.stdout.on("data", (data) => {
         console.log('Received stdout:', data.toString());
         result += data.toString();
@@ -35,12 +34,13 @@ export async function POST(request: Request) {
         console.log('Python process closed with code:', code);
         if (code !== 0) {
           console.error('Python script error:', errorOutput);
-          return resolve(
+          resolve(
             NextResponse.json(
               { error: "Python script error", details: errorOutput },
               { status: 500 }
             )
           );
+          return;
         }
         try {
           const jsonResult = JSON.parse(result.trim());
