@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bot Detection System - Technical Documentation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        
+        h1,
+        h2,
+        h3 {
+            color: #2563eb;
+            margin-top: 2em;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 4em;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 2em;
+        }
+        
+        .header img {
+            width: 200px;
+            margin-bottom: 1em;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            padding: 1em;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+            border: 1px solid #e5e7eb;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2em 0;
+        }
+        
+        th,
+        td {
+            border: 1px solid #e5e7eb;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background: #f3f4f6;
+        }
+        
+        .note {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 1em;
+            margin: 1em 0;
+        }
+        
+        .diagram {
+            text-align: center;
+            margin: 2em 0;
+        }
+        
+        @media print {
+            body {
+                font-size: 11pt;
+            }
+            .no-print {
+                display: none;
+            }
+            a {
+                text-decoration: none;
+                color: #333;
+            }
+        }
+        
+        .resources {
+            background: #1a1e2e;
+            border: 1px solid #2d3348;
+            border-radius: 8px;
+            padding: 1.5em;
+            margin: 2em 0;
+        }
+        
+        .resources ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .resources li {
+            margin: 0.8em 0;
+        }
+        
+        .resources a {
+            color: #4f46e5;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .resources a:hover {
+            color: #6366f1;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <img src="logo-removebg.png" alt="QubitRules Logo">
+        <h1>Bot Profile Detection System</h1>
+        <h2>Technical Documentation</h2>
+        <p>Version 1.0 | Last Updated: feb 2025</p>
+        <p>QubitRules</p>
+    </div>
+
+    <div class=" bg-purple-400 border border-gray-800">
+        <h2 class="text-white">Quick Links</h2>
+        <ul>
+            <li>
+                <strong class="text-gray-300">Live Demo:</strong>
+                <a href="http://202.71.184.6:3001/" target="_blank" class="text-blue-500 hover:text-blue-400">http://202.71.184.6:3001/</a>
+            </li>
+            <li>
+                <strong class="text-gray-300">GitHub Repository:</strong>
+                <a href="https://github.com/captainsza/Bot_Profile_Detection" target="_blank" class="text-blue-500 hover:text-blue-400">Bot Profile Detection on GitHub</a>
+                <span class="text-gray-400 text-sm ml-2">(For detailed documentation, code, and setup instructions)</span>
+            </li>
+            <li>
+                <strong class="text-gray-300">Demo Video:</strong>
+                <a href="https://drive.google.com/file/d/1qGdTAKxxn5jDQ2275YJKORpcdi6V3hei/view?usp=drive_link" target="_blank" class="text-blue-500 hover:text-blue-400">Watch Demo</a>
+            </li>
+        </ul>
+    </div>
+
+    <h2>Table of Contents</h2>
+    <ol>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#architecture">System Architecture</a></li>
+        <li><a href="#models">Model Details</a></li>
+        <li><a href="#installation">Installation Guide</a></li>
+        <li><a href="#api">API Documentation</a></li>
+        <li><a href="#training">Model Training Process</a></li>
+        <li><a href="#performance">Performance Metrics</a></li>
+        <li><a href="#deployment">Deployment Guide</a></li>
+    </ol>
+
+    <h2 id="introduction">1. Introduction</h2>
+    <p>The Bot Profile Detection System is an advanced machine learning solution designed to identify automated accounts (bots) on social media platforms. The system employs two distinct approaches:</p>
+    <ul>
+        <li>Traditional Model: Combines Logistic Regression with Isolation Forest</li>
+        <li>Improved Model: Uses DistilBERT with custom neural architecture</li>
+    </ul>
+
+    <div class="note">
+        <strong>Note:</strong> This document assumes familiarity with basic machine learning concepts and web development technologies.
+    </div>
+
+    <h2 id="architecture">2. System Architecture</h2>
+    <div class="diagram">
+        <pre class="code-block">
+Frontend (Next.js)
+     ↓
+API Routes (Edge Runtime)
+     ↓
+Python Backend
+   ↙     ↘
+Traditional   Improved
+  Model        Model
+        </pre>
+    </div>
+
+    <h2 id="models">3. Model Details</h2>
+    <h3>3.1 Traditional Model</h3>
+    <ul>
+        <li>Framework: scikit-learn</li>
+        <li>Components:
+            <ul>
+                <li>Logistic Regression (main classifier)</li>
+                <li>Isolation Forest (anomaly detection)</li>
+                <li>TF-IDF Vectorizer (text features)</li>
+            </ul>
+        </li>
+        <li>Input Features:
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>Tweet Text</td>
+                    <td>Text</td>
+                    <td>Processed using TF-IDF</td>
+                </tr>
+                <tr>
+                    <td>Engagement Metrics</td>
+                    <td>Numeric</td>
+                    <td>Retweets, Mentions, Followers</td>
+                </tr>
+                <tr>
+                    <td>Account Status</td>
+                    <td>Boolean</td>
+                    <td>Verification status</td>
+                </tr>
+            </table>
+        </li>
+    </ul>
+
+    <h3>3.2 Improved Model</h3>
+    <ul>
+        <li>Framework: TensorFlow</li>
+        <li>Architecture:
+            <ul>
+                <li>DistilBERT base layer (frozen)</li>
+                <li>Custom neural layers</li>
+                <li>Multi-modal feature fusion</li>
+            </ul>
+        </li>
+        <li>Training Configuration:
+            <table>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Batch Size</td>
+                    <td>32</td>
+                </tr>
+                <tr>
+                    <td>Learning Rate</td>
+                    <td>2e-5</td>
+                </tr>
+                <tr>
+                    <td>Epochs</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>Optimizer</td>
+                    <td>Adam</td>
+                </tr>
+            </table>
+        </li>
+    </ul>
+
+    <h2 id="api">5. API Documentation</h2>
+    <h3>Prediction Endpoint</h3>
+    <pre class="code-block">
+POST /api/predict
+
+Request Body:
+{
+    "Tweet": string,
+    "Retweet Count": number,
+    "Mention Count": number,
+    "Follower Count": number,
+    "Verified": boolean,
+    "Hashtags": string,
+    "model_version": "old" | "improved"
+}
+
+Response:
+{
+    "Predicted_Bot_Label": number,
+    "LR_Probability": number,
+    "Isolation_Forest_Pred": number | null,
+    "model_version": string
+}
+    </pre>
+
+    <h2 id="performance">7. Performance Metrics</h2>
+    <table>
+        <tr>
+            <th>Metric</th>
+            <th>Traditional Model</th>
+            <th>Improved Model</th>
+        </tr>
+        <tr>
+            <td>Accuracy</td>
+            <td>89%</td>
+            <td>94%</td>
+        </tr>
+        <tr>
+            <td>Precision</td>
+            <td>0.87</td>
+            <td>0.93</td>
+        </tr>
+        <tr>
+            <td>Recall</td>
+            <td>0.86</td>
+            <td>0.92</td>
+        </tr>
+        <tr>
+            <td>F1 Score</td>
+            <td>0.86</td>
+            <td>0.92</td>
+        </tr>
+    </table>
+
+    <h2 id="deployment">8. Deployment Guide</h2>
+    <p>For detailed deployment instructions, please refer to our README.md file. The system can be deployed using:</p>
+    <ul>
+        <li>Docker containers</li>
+        <li>Direct server deployment</li>
+        <li>Cloud platforms (AWS, GCP, Azure)</li>
+    </ul>
+
+    <div class="note">
+        <strong>Important:</strong> Ensure all model files are properly placed in the modal/ directory before deployment.
+    </div>
+
+    <footer style="margin-top: 4em; text-align: center; border-top: 2px solid #e5e7eb; padding-top: 2em;">
+        <p>© 2024 QubitRules Technologies. All rights reserved.</p>
+        <p><a href="https://qubitrules.com">https://qubitrules.com</a></p>
+    </footer>
+</body>
+
+</html>
