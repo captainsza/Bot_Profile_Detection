@@ -127,7 +127,7 @@ Bot_Profile_Detection/
    ```bash
    # Open Command Prompt or PowerShell
    cd C:\Users\YourUsername\Documents
-   git clone https://github.com/yourusername/Bot_Profile_Detection.git
+   git clone https://github.com/captainsza/Bot_Profile_Detection.git
    cd Bot_Profile_Detection
    ```
 
@@ -216,7 +216,7 @@ sudo apt install python3-venv nodejs npm
 
 3. Clone and setup the project:
 ```bash
-git clone https://github.com/yourusername/Bot_Profile_Detection.git
+git clone https://github.com/captainsza/Bot_Profile_Detection.git
 cd Bot_Profile_Detection
 python3 -m venv venv
 source venv/bin/activate
@@ -467,7 +467,7 @@ pm2 monit
 
 ## 🌟 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=yourusername/Bot_Profile_Detection&type=Date)](https://star-history.com/#yourusername/Bot_Profile_Detection&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=captainsza/Bot_Profile_Detection&type=Date)](https://star-history.com/#captainsza/Bot_Profile_Detection&Date)
 
 ## 📸 Screenshots
 
