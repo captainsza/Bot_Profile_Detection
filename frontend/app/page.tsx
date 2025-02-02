@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 // Dynamically import Chart so that it only loads on the client side.
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -106,6 +107,32 @@ export default function Home() {
   };
 
   const chartSeries = result ? [Number((result.LR_Probability * 100).toFixed(2))] : [0];
+
+  // Loading skeleton component
+  const ResultSkeleton = () => (
+    <div className="animate-pulse space-y-6">
+      <div className="h-8 bg-gray-700/50 rounded-lg w-3/4"></div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="h-24 bg-gray-700/50 rounded-lg"></div>
+        <div className="h-24 bg-gray-700/50 rounded-lg"></div>
+      </div>
+      <div className="h-[250px] bg-gray-700/50 rounded-lg"></div>
+      <div className="h-32 bg-gray-700/50 rounded-lg"></div>
+    </div>
+  );
+
+  // Result animation component
+  const ResultAnimation = ({ isBot }: { isBot: boolean }) => (
+    <div className="flex justify-center items-center mb-6">
+      <Image
+        src={isBot ? "/bot-detected.gif" : "/human-verified.gif"}
+        alt={isBot ? "Bot Detected" : "Human Verified"}
+        width={200}
+        height={200}
+        className="rounded-lg"
+      />
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white flex flex-col items-center p-4 md:p-8">
@@ -223,22 +250,30 @@ export default function Home() {
 
         {/* Results Section */}
         <motion.div 
-          className={`w-full lg:w-1/2 backdrop-blur-md bg-white/5 p-8 rounded-2xl shadow-2xl border border-white/10 ${!result && 'flex items-center justify-center'}`}
+          className={`w-full lg:w-1/2 backdrop-blur-md bg-white/5 p-8 rounded-2xl shadow-2xl border border-white/10 ${!result && !loading && 'flex items-center justify-center'}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
           {!result && !loading && (
             <div className="text-center text-gray-400">
-              <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+              <Image
+                src="/analysis-waiting.gif"
+                alt="Waiting for Analysis"
+                width={200}
+                height={200}
+                className="mx-auto mb-4 opacity-80"
+              />
               <p className="text-lg">Enter tweet details to see prediction results</p>
             </div>
           )}
 
+          {loading && <ResultSkeleton />}
+
           {result && !result.error && (
             <div className="space-y-6">
+              <ResultAnimation isBot={result.Predicted_Bot_Label === 1} />
+              
               <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
                 Analysis Results
               </h2>
@@ -276,6 +311,13 @@ export default function Home() {
 
           {result?.error && (
             <div className="text-red-400 p-4 rounded-lg bg-red-900/20 border border-red-900">
+              <Image
+                src="/error.gif"
+                alt="Error"
+                width={100}
+                height={100}
+                className="mx-auto mb-4"
+              />
               {result.error}
             </div>
           )}
