@@ -1,0 +1,89 @@
+=== Dataset Metadata Log ===
+
+1. Dataset Shape:
+(50000, 11)
+
+2. Column Names:
+['User ID', 'Username', 'Tweet', 'Retweet Count', 'Mention Count', 'Follower Count', 'Verified', 'Bot Label', 'Location', 'Created At', 'Hashtags']
+
+3. Data Types:
+User ID            int64
+Username          object
+Tweet             object
+Retweet Count      int64
+Mention Count      int64
+Follower Count     int64
+Verified            bool
+Bot Label          int64
+Location          object
+Created At        object
+Hashtags          object
+dtype: object
+
+4. First 5 Rows:
+   User ID        Username                                              Tweet  ...      Location           Created At            Hashtags
+0   132131           flong  Station activity person against natural majori...  ...     Adkinston  2020-05-11 15:29:50                 NaN
+1   289683  hinesstephanie  Authority research natural life material staff...  ...    Sanderston  2022-11-26 05:18:10           both live
+2   779715      roberttran  Manage whose quickly especially foot none to g...  ...  Harrisonfurt  2022-08-08 03:16:54         phone ahead
+3   696168          pmason  Just cover eight opportunity strong policy which.  ...  Martinezberg  2021-08-14 22:27:05  ever quickly new I
+4   704441          noah87                      Animal sign six data good or.  ...  Camachoville  2020-04-13 21:24:21     foreign mention
+
+[5 rows x 11 columns]
+
+5. Detailed Dataset Info:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 50000 entries, 0 to 49999
+Data columns (total 11 columns):
+ #   Column          Non-Null Count  Dtype 
+---  ------          --------------  ----- 
+ 0   User ID         50000 non-null  int64 
+ 1   Username        50000 non-null  object
+ 2   Tweet           50000 non-null  object
+ 3   Retweet Count   50000 non-null  int64 
+ 4   Mention Count   50000 non-null  int64 
+ 5   Follower Count  50000 non-null  int64 
+ 6   Verified        50000 non-null  bool  
+ 7   Bot Label       50000 non-null  int64 
+ 8   Location        50000 non-null  object
+ 9   Created At      50000 non-null  object
+ 10  Hashtags        41659 non-null  object
+dtypes: bool(1), int64(5), object(5)
+memory usage: 3.9+ MB
+
+6. Statistical Summary:
+              User ID Username                                              Tweet  Retweet Count  ...     Bot Label       Location           Created At  Hashtags
+count    50000.000000    50000                                              50000    50000.00000  ...  50000.000000          50000                50000     41659
+unique            NaN    40566                                              50000            NaN  ...           NaN          25199                49989     34247
+top               NaN   ksmith  Here morning class various room human true bec...            NaN  ...           NaN  South Michael  2020-06-06 06:17:41      area
+freq              NaN       21                                                  1            NaN  ...           NaN             44                    2        21
+mean    548890.680540      NaN                                                NaN       50.00560  ...      0.500360            NaN                  NaN       NaN
+std     259756.681425      NaN                                                NaN       29.18116  ...      0.500005            NaN                  NaN       NaN
+min     100025.000000      NaN                                                NaN        0.00000  ...      0.000000            NaN                  NaN       NaN
+25%     323524.250000      NaN                                                NaN       25.00000  ...      0.000000            NaN                  NaN       NaN
+50%     548147.000000      NaN                                                NaN       50.00000  ...      1.000000            NaN                  NaN       NaN
+75%     772983.000000      NaN                                                NaN       75.00000  ...      1.000000            NaN                  NaN       NaN
+max     999995.000000      NaN                                                NaN      100.00000  ...      1.000000            NaN                  NaN       NaN
+
+[11 rows x 11 columns]
+
+7. Missing Values per Column:
+User ID              0
+Username             0
+Tweet                0
+Retweet Count        0
+Mention Count        0
+Follower Count       0
+Verified             0
+Bot Label            0
+Location             0
+Created At           0
+Hashtags          8341
+dtype: int64
+
+8. Correlation Matrix (Numeric Columns):
+                 User ID  Retweet Count  Mention Count  Follower Count  Bot Label
+User ID         1.000000       0.007776       0.007712        0.005580   0.006059
+Retweet Count   0.007776       1.000000      -0.000020       -0.007624   0.001250
+Mention Count   0.007712      -0.000020       1.000000        0.003265  -0.006912
+Follower Count  0.005580      -0.007624       0.003265        1.000000   0.001162
+Bot Label       0.006059       0.001250      -0.006912        0.001162   1.000000

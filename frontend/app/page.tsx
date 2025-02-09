@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import ErrorPopup from "../components/ErrorPopup";
 
 // Dynamically import Chart so that it only loads on the client side.
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -24,6 +25,9 @@ export default function Home() {
   
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState("");
+  const [fetchingTwitter, setFetchingTwitter] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -55,6 +59,32 @@ export default function Home() {
       setResult({ error: "Failed to fetch prediction" });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchTwitterData = async () => {
+    if (!username) {
+      setErrorMessage("Please enter a Twitter username");
+      return;
+    }
+    
+    setFetchingTwitter(true);
+    try {
+      const response = await fetch(`/api/twitter?username=${encodeURIComponent(username)}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setFormData(prev => ({
+          ...prev,
+          ...data
+        }));
+      } else {
+        throw new Error(data.error || 'Failed to fetch Twitter data');
+      }
+    } catch (error: any) {
+      setErrorMessage(error.message || 'Failed to fetch Twitter data');
+    } finally {
+      setFetchingTwitter(false);
     }
   };
 
@@ -135,6 +165,40 @@ export default function Home() {
     </div>
   );
 
+  // Add this new component for the verification toggle
+  const VerificationToggle = () => (
+    <div className="flex flex-col space-y-2">
+      <label className="text-sm font-medium text-gray-300">
+        Account Verification
+      </label>
+      <div className="flex items-center p-2 rounded-lg bg-gray-800/50 border border-gray-700">
+        <div className="relative w-full">
+          <div 
+            className={`h-9 flex items-center rounded-md cursor-pointer ${
+              formData.Verified ? 'bg-gradient-to-r from-blue-600 to-blue-700' : 'bg-gray-700'
+            }`}
+            onClick={() => setFormData(prev => ({ ...prev, Verified: !prev.Verified }))}
+          >
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              {formData.Verified ? (
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
+            </div>
+            <span className="flex-1 text-center text-sm font-medium">
+              {formData.Verified ? 'Verified Account' : 'Not Verified'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white flex flex-col items-center p-4 md:p-8">
       <motion.h1 
@@ -155,6 +219,41 @@ export default function Home() {
           transition={{ duration: 0.8 }}
         >
           <div className="space-y-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <label className="block text-sm font-medium mb-2 text-gray-300">
+                  Twitter Username
+                </label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                    @
+                  </span>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value.replace('@', ''))}
+                    className="w-full pl-8 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="username"
+                  />
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={fetchTwitterData}
+                disabled={fetchingTwitter || !username}
+                className="self-end px-4 py-3 bg-blue-600 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]"
+              >
+                {fetchingTwitter ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />
+                    <span>Fetching...</span>
+                  </div>
+                ) : (
+                  "Fetch Data"
+                )}
+              </button>
+            </div>
+
             <div>
               <label className="block text-sm font-medium mb-2 text-gray-300" htmlFor="Tweet">
                 Tweet Content
@@ -187,19 +286,8 @@ export default function Home() {
                   />
                 </div>
               ))}
-              <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-800/50 border border-gray-700">
-                <input
-                  id="Verified"
-                  name="Verified"
-                  type="checkbox"
-                  checked={formData.Verified}
-                  onChange={handleChange}
-                  className="w-5 h-5 rounded text-indigo-500 focus:ring-indigo-500 bg-gray-700 border-gray-600"
-                />
-                <label className="text-sm font-medium text-gray-300">
-                  Verified Account
-                </label>
-              </div>
+              {/* Replace the old checkbox with our new toggle component */}
+              <VerificationToggle />
             </div>
 
             <div>
@@ -324,6 +412,13 @@ export default function Home() {
           )}
         </motion.div>
       </div>
+
+      {errorMessage && (
+        <ErrorPopup
+          message={errorMessage}
+          onClose={() => setErrorMessage(null)}
+        />
+      )}
 
       {/* Footer Section */}
       <footer className="w-full mt-16 border-t border-gray-800 pt-8 pb-4">
