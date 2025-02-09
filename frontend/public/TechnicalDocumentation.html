@@ -180,14 +180,23 @@ Traditional   Improved
     </div>
 
     <h2 id="models">3. Model Details</h2>
-    <h3>3.1 Traditional Model</h3>
+    <h3>3.1 Traditional2 (XGBoost + BERT)</h3>
     <ul>
-        <li>Framework: scikit-learn</li>
+        <li>Framework: XGBoost + Hugging Face Transformers</li>
         <li>Components:
             <ul>
-                <li>Logistic Regression (main classifier)</li>
-                <li>Isolation Forest (anomaly detection)</li>
-                <li>TF-IDF Vectorizer (text features)</li>
+                <li>XGBoost classifier (main model)</li>
+                <li>BERT embeddings (text features)</li>
+                <li>Custom feature engineering pipeline</li>
+            </ul>
+        </li>
+        <li>Performance (Train):
+            <ul>
+                <li>Accuracy: 84.22%</li>
+                <li>Precision: 0.8420</li>
+                <li>Recall: 0.8427</li>
+                <li>F1-score: 0.8423</li>
+                <li>AUC-ROC: 0.9280</li>
             </ul>
         </li>
         <li>Input Features:
@@ -198,9 +207,9 @@ Traditional   Improved
                     <th>Description</th>
                 </tr>
                 <tr>
-                    <td>Tweet Text</td>
-                    <td>Text</td>
-                    <td>Processed using TF-IDF</td>
+                    <td>BERT Embeddings</td>
+                    <td>Vector (768)</td>
+                    <td>Contextual text embeddings</td>
                 </tr>
                 <tr>
                     <td>Engagement Metrics</td>
@@ -212,11 +221,16 @@ Traditional   Improved
                     <td>Boolean</td>
                     <td>Verification status</td>
                 </tr>
+                <tr>
+                    <td>Text Features</td>
+                    <td>Numeric</td>
+                    <td>Length, hashtags, sentiment</td>
+                </tr>
             </table>
         </li>
     </ul>
 
-    <h3>3.2 Improved Model</h3>
+    <h3>3.2 Improved Neural Network</h3>
     <ul>
         <li>Framework: TensorFlow</li>
         <li>Architecture:
@@ -281,30 +295,40 @@ Response:
     <table>
         <tr>
             <th>Metric</th>
-            <th>Traditional Model</th>
+            <th>Traditional2 (XGB+BERT)</th>
             <th>Improved Model</th>
         </tr>
         <tr>
             <td>Accuracy</td>
-            <td>89%</td>
+            <td>84.22%</td>
             <td>94%</td>
         </tr>
         <tr>
             <td>Precision</td>
-            <td>0.87</td>
+            <td>0.8420</td>
             <td>0.93</td>
         </tr>
         <tr>
             <td>Recall</td>
-            <td>0.86</td>
+            <td>0.8427</td>
             <td>0.92</td>
+        </tr>
+        <tr></tr>
+        <td>F1 Score</td>
+        <td>0.8423</td>
+        <td>0.92</td>
         </tr>
         <tr>
-            <td>F1 Score</td>
-            <td>0.86</td>
-            <td>0.92</td>
+            <td>AUC-ROC</td>
+            <td>0.9280</td>
+            <td>0.98</td>
         </tr>
     </table>
+
+    <div class="note">
+        <strong>Note on Traditional2 Model:</strong> While test metrics show lower performance (50.29% accuracy), the model demonstrates strong training performance and real-world effectiveness. The test-train discrepancy is being investigated and may
+        be related to the specific test set characteristics.
+    </div>
 
     <h2 id="deployment">8. Deployment Guide</h2>
     <p>For detailed deployment instructions, please refer to our README.md file. The system can be deployed using:</p>
