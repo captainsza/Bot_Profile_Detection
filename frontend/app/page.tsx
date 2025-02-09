@@ -20,7 +20,7 @@ export default function Home() {
     "Follower Count": 0,
     Verified: false,
     Hashtags: "",
-    model_version: "old" // default to the traditional model
+    model_version: "old" // default to the traditional (old) model
   });
   
   const [result, setResult] = useState<any>(null);
@@ -95,17 +95,21 @@ export default function Home() {
     const probabilityPercent = (LR_Probability * 100).toFixed(2);
     let explanation = "";
     if (Predicted_Bot_Label === 1) {
-      explanation = `Our analysis suggests that this account is likely automated. ${
-        model_version === "old"
-          ? `The traditional model assigned a bot probability of ${probabilityPercent}%, ${Isolation_Forest_Pred === 1 ? "and the anomaly detector indicated unusual behavior." : "though the anomaly detector did not flag any irregular activity."}`
-          : `The improved model estimated a bot probability of ${probabilityPercent}%.`
-      }`;
+      if (model_version === "old") {
+        explanation = `Our analysis suggests that this account is likely automated. The traditional model assigned a bot probability of ${probabilityPercent}%, ${Isolation_Forest_Pred === 1 ? "and the anomaly detector indicated unusual behavior." : "though the anomaly detector did not flag any irregular activity."}`;
+      } else if (model_version === "traditional2") {
+        explanation = `Our analysis suggests that this account is likely automated. The traditional2 (XGBoost + BERT) model estimated a bot probability of ${probabilityPercent}%.`;
+      } else {
+        explanation = `Our analysis suggests that this account is likely automated. The improved model estimated a bot probability of ${probabilityPercent}%.`;
+      }
     } else {
-      explanation = `The results indicate that this account is likely genuine. ${
-        model_version === "old"
-          ? `The traditional model estimated a bot probability of ${probabilityPercent}% with no unusual activity detected.`
-          : `The improved model estimated a bot probability of ${probabilityPercent}%.`
-      }`;
+      if (model_version === "old") {
+        explanation = `The results indicate that this account is likely genuine. The traditional model estimated a bot probability of ${probabilityPercent}% with no unusual activity detected.`;
+      } else if (model_version === "traditional2") {
+        explanation = `The results indicate that this account is likely genuine. The traditional2 (XGBoost + BERT) model estimated a bot probability of ${probabilityPercent}%.`;
+      } else {
+        explanation = `The results indicate that this account is likely genuine. The improved model estimated a bot probability of ${probabilityPercent}%.`;
+      }
     }
     return explanation;
   };
@@ -313,7 +317,7 @@ export default function Home() {
                 onChange={handleChange}
                 className="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
               >
-                <option value="old">Traditional</option>
+                <option value="traditional2">Traditional2 (XGBoost + BERT)</option>
                 <option value="improved">Improved</option>
               </select>
             </div>

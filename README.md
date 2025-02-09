@@ -4,13 +4,12 @@
 
 ![Bot Detection Demo](assets/demo.gif)
 
-A cutting-edge system for detecting AI-powered bot accounts on social media platforms using dual model approaches.
+A cutting-edge system for detecting AI-powered bot accounts using a hybrid approach combining XGBoost, BERT embeddings, and neural networks.
 
 <div className="p-4 mb-8 bg-indigo-900/30 border-2 border-indigo-500/50 rounded-lg"></div>
   <h2 className="text-xl font-bold mb-2">🌐 Live Demo Available!</h2>
   <p>Try our bot detection system without any setup:</p>
-  <a href="https://bot.qubitrules.com/" target="_blank" rel="noopener noreferrer" 
-     className="text-lg font-bold text-indigo-400 hover:text-indigo-300">
+  <a href="https://bot.qubitrules.com/" target="_blank" rel="noopener noreferrer">
     👉 Launch Demo: https://bot.qubitrules.com/
   </a>
 </div>
@@ -56,7 +55,7 @@ Traditional rule-based detection methods often fail against these advanced bots.
 
 ### Advanced Detection Models
 - **Dual Model Architecture**
-  - 🔄 Traditional: Logistic Regression + Isolation Forest (.pkl)
+  - 🔄 Traditional2: XGBoost + BERT (.pkl)
   - 🧠 Advanced: Multi-modal Neural Network with DistilBERT (.h5)
   
 ### Real-time Analysis
@@ -377,10 +376,10 @@ graph TD
 
 ### Models
 
-1. **Traditional Model**
-   - 🔍 Logistic Regression + Isolation Forest
+1. **Traditional2 (XGBoost + BERT)**
+   - 🔍 XGBoost + BERT embeddings
    - 📊 Feature engineering using NLTK
-   - 💾 Compact .pkl format (~50MB)
+   - 💾 Compact .pkl format (~250MB)
    - ⚡ Fast inference time: ~100ms
 
 2. **Improved Model**
