@@ -122,7 +122,7 @@ export default function Home() {
       </main>
 
       <footer className="container mx-auto px-4 py-8 text-center">
-        <p>&copy; 2023 Bot Profile Detection. All rights reserved.</p>
+        <p>&copy; 2025 Bot Profile Detection. All rights reserved.</p>
       </footer>
     </div>
   )
