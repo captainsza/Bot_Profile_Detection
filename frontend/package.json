@@ -10,11 +10,17 @@
     },
     "dependencies": {
         "apexcharts": "^4.4.0",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
         "framer-motion": "^12.0.6",
+        "lucide-react": "^0.475.0",
         "next": "15.1.6",
+        "ogl": "^1.0.11",
         "react": "^19.0.0",
         "react-apexcharts": "^1.7.0",
         "react-dom": "^19.0.0",
+        "tailwind-merge": "^3.0.1",
+        "tailwindcss-animate": "^1.0.7",
         "twitter-api-v2": "^1.19.1"
     },
     "devDependencies": {
