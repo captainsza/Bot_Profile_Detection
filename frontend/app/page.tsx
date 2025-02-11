@@ -1,130 +1,155 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
-import Image from "next/image"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { ArrowRight, Github } from "lucide-react"
+
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import Hero from "@/components/components/Hero"
+import InstallationJourney from "@/components/components/InstallationJourney"
+import ModelShowcase from "@/components/components/ModelShowcase"
+
+import CursorTrail from "@/components/components/CursorTrail"
+import useSound from "use-sound"
+import type React from "react" // Added import for React
+
+const sections = [
+  { id: "hero", name: "Hero", icon: "🏠" },
+  { id: "installation", name: "Installation", icon: "⚙️" },
+  { id: "showcase", name: "Models", icon: "🤖" }
+]
 
 export default function Home() {
+  const [currentSection, setCurrentSection] = useState("hero")
+  const [playAmbient, { stop: stopAmbient }] = useSound("/sounds/ambient.mp3", { loop: true })
+  const [isSoundOn, setIsSoundOn] = useState(false)
+
+  useEffect(() => {
+    if (isSoundOn) {
+      playAmbient()
+    } else {
+      stopAmbient()
+    }
+  }, [isSoundOn, playAmbient, stopAmbient])
+
+  const handleScroll = (event: React.WheelEvent) => {
+    const currentIndex = sections.findIndex(section => section.id === currentSection)
+    if (event.deltaY > 0 && currentIndex < sections.length - 1) {
+      setCurrentSection(sections[currentIndex + 1].id)
+    } else if (event.deltaY < 0 && currentIndex > 0) {
+      setCurrentSection(sections[currentIndex - 1].id)
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
-      <header className="container mx-auto px-4 py-8">
-        <nav className="flex justify-between items-center">
-          <Image src="/logo-bgnot.png" alt="Logo" width={40} height={40} className="rounded-full" />
-          <div className="space-x-4">
-            <Link
-              href="https://github.com/captainsza/Bot_Profile_Detection"
-              className="hover:text-blue-400 transition-colors"
+    <main className="h-screen overflow-hidden relative" onWheel={handleScroll}>
+      <CursorTrail />
+      
+      {/* Sound Toggle Button */}
+      <button
+        className="fixed top-4 right-4 z-50 p-2 bg-[#2d1b4e] hover:bg-[#382460] rounded-full transition-all duration-300"
+        onClick={() => setIsSoundOn(!isSoundOn)}
+      >
+        {isSoundOn ? "🔊" : "🔇"}
+      </button>
+
+      {/* Side Navigation */}
+      <motion.div 
+        className="fixed right-8 top-1/2 -translate-y-1/2 z-50 hidden md:block"
+        initial={{ opacity: 0, x: 100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1 }}
+      >
+        <div className="space-y-4">
+          {sections.map((section, index) => (
+            <motion.div
+              key={section.id}
+              className="relative group"
+              whileHover={{ scale: 1.1 }}
             >
-              <Github className="inline-block mr-2" />
-              GitHub
-            </Link>
-           
-          </div>
-        </nav>
-      </header>
+              {/* Indicator Line */}
+              <div 
+                className={`absolute right-8 top-1/2 h-8 w-[2px] -translate-y-1/2 transition-all duration-300 ${
+                  currentSection === section.id 
+                    ? "bg-[#00ffe5] h-12" 
+                    : "bg-gray-700 group-hover:bg-gray-500"
+                }`}
+              />
 
-      <main className="container mx-auto px-4 py-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-5xl font-bold mb-6">🤖 Bot Profile Detection</h1>
-          <p className="text-xl mb-8">
-            A cutting-edge system for detecting AI-powered bot accounts using a hybrid approach combining XGBoost, BERT
-            embeddings, and neural networks.
-          </p>
-          <Link
-            href="/bot-detection"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full inline-flex items-center transition-colors"
-          >
-            Try Live Demo <ArrowRight className="ml-2" />
-          </Link>
-        </motion.div>
+              {/* Navigation Dot */}
+              <button
+                onClick={() => setCurrentSection(section.id)}
+                className={`relative z-10 w-4 h-4 rounded-full transition-all duration-300 ${
+                  currentSection === section.id
+                    ? "bg-[#00ffe5] shadow-[0_0_15px_#00ffe5]"
+                    : "bg-gray-700 group-hover:bg-gray-500"
+                }`}
+              />
 
-        <div className="grid md:grid-cols-2 gap-12">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <h2 className="text-3xl font-bold mb-4">Key Features</h2>
-            <ul className="space-y-2">
-              <li>✨ Advanced Detection Models</li>
-              <li>⚡ Real-time Analysis</li>
-              <li>📊 Comprehensive Feature Analysis</li>
-              <li>🎨 Modern UI/UX with Dark Mode</li>
-            </ul>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <Image
-              src="/feature-analysis.png"
-              alt="Feature Analysis"
-              width={500}
-              height={300}
-              className="rounded-lg shadow-lg"
-            />
-          </motion.div>
+              {/* Section Label */}
+              <div className={`
+                absolute right-12 top-1/2 -translate-y-1/2 
+                whitespace-nowrap px-4 py-2 rounded-lg
+                transition-all duration-300 flex items-center gap-2
+                ${currentSection === section.id
+                  ? "opacity-100 translate-x-0 bg-[#2d1b4e]"
+                  : "opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0"
+                }
+              `}>
+                <span className="text-lg">{section.icon}</span>
+                <span className={`text-sm font-medium ${
+                  currentSection === section.id ? "text-[#00ffe5]" : "text-gray-400"
+                }`}>
+                  {section.name}
+                </span>
+              </div>
+            </motion.div>
+          ))}
         </div>
+      </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-16"
-        >
-          <h2 className="text-3xl font-bold mb-4">Performance Metrics</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr>
-                  <th className="py-2 px-4 bg-blue-900 font-bold uppercase text-sm text-blue-200 border-b border-gray-700">
-                    Model
-                  </th>
-                  <th className="py-2 px-4 bg-blue-900 font-bold uppercase text-sm text-blue-200 border-b border-gray-700">
-                    Precision
-                  </th>
-                  <th className="py-2 px-4 bg-blue-900 font-bold uppercase text-sm text-blue-200 border-b border-gray-700">
-                    Recall
-                  </th>
-                  <th className="py-2 px-4 bg-blue-900 font-bold uppercase text-sm text-blue-200 border-b border-gray-700">
-                    F1 Score
-                  </th>
-                  <th className="py-2 px-4 bg-blue-900 font-bold uppercase text-sm text-blue-200 border-b border-gray-700">
-                    AUC-ROC
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="py-2 px-4 border-b border-gray-700">Traditional</td>
-                  <td className="py-2 px-4 border-b border-gray-700">0.89</td>
-                  <td className="py-2 px-4 border-b border-gray-700">0.92</td>
-                  <td className="py-2 px-4 border-b border-gray-700">0.90</td>
-                  <td className="py-2 px-4 border-b border-gray-700">0.94</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-4 border-b border-gray-700">Improved</td>
-                  <td className="py-2 px-4 border-b border-gray-700">0.95</td>
-                  <td className="py-2 px-4 border-b border-gray-700">0.96</td>
-                  <td className="py-2 px-4 border-b border-gray-700">0.95</td>
-                  <td className="py-2 px-4 border-b border-gray-700">0.98</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </motion.div>
-      </main>
+      {/* Mobile Navigation */}
+      <motion.div 
+        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 md:hidden"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1 }}
+      >
+        <div className="flex gap-4 bg-[#1a1e2e]/80 backdrop-blur-md p-3 rounded-full">
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              onClick={() => setCurrentSection(section.id)}
+              className={`p-2 rounded-full transition-all duration-300 ${
+                currentSection === section.id
+                  ? "bg-[#2d1b4e] text-[#00ffe5]"
+                  : "text-gray-400 hover:text-gray-300"
+              }`}
+            >
+              <span className="text-xl">{section.icon}</span>
+            </button>
+          ))}
+        </div>
+      </motion.div>
 
-      <footer className="container mx-auto px-4 py-8 text-center">
-        <p>&copy; 2025 Bot Profile Detection. All rights reserved.</p>
-      </footer>
-    </div>
+      {/* Main Content */}
+      <AnimatePresence mode="wait">
+        {currentSection === "hero" && (
+          <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <Hero />
+          </motion.div>
+        )}
+        {currentSection === "installation" && (
+          <motion.div key="installation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <InstallationJourney />
+          </motion.div>
+        )}
+        {currentSection === "showcase" && (
+          <motion.div key="showcase" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <ModelShowcase />
+          </motion.div>
+        )}
+       
+      </AnimatePresence>
+    </main>
   )
 }
 

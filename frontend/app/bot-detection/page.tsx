@@ -6,17 +6,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-
-// Import our new components
+import { FiArrowLeft, FiGithub, FiBook } from "react-icons/fi";
 import PredictionForm from "@/components/PredictionForm";
 import ResultSection from "@/components/ResultSection";
 import ErrorPopup from "@/components/ErrorPopup";
 
-// Dynamically import the Chart so that it only loads on the client side in ResultSection
-// We'll do that inside ResultSection to keep it more self-contained
-
-export default function Home() {
-  // --------------------- STATES ---------------------
+export default function BotPage() {
   const [formData, setFormData] = useState({
     Tweet: "",
     "Retweet Count": 0,
@@ -33,7 +28,6 @@ export default function Home() {
   const [fetchingTwitter, setFetchingTwitter] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // --------------------- HANDLERS ---------------------
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -54,7 +48,6 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
-          // Convert Verified to a numeric value if needed
           Verified: formData.Verified ? 1 : 0,
         }),
       });
@@ -92,7 +85,6 @@ export default function Home() {
     }
   };
 
-  // --------------------- EXPLANATION GENERATOR ---------------------
   const getExplanation = () => {
     if (!result) return "";
     const { Predicted_Bot_Label, LR_Probability, Isolation_Forest_Pred, model_version } = result;
@@ -123,7 +115,6 @@ export default function Home() {
     return explanation;
   };
 
-  // --------------------- CHART DATA ---------------------
   const chartOptions = {
     chart: {
       type: "radialBar" as const,
@@ -152,71 +143,113 @@ export default function Home() {
 
   const chartSeries = result ? [Number((result.LR_Probability * 100).toFixed(2))] : [0];
 
-  // --------------------- RENDER ---------------------
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white flex flex-col items-center p-4 md:p-8">
-      <motion.h1
-        className="text-4xl md:text-5xl font-bold mt-6 mb-8 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+    <div className="min-h-screen bg-[#060714] text-gray-200">
+      <motion.header 
+        className="fixed top-0 left-0 right-0 z-50 bg-[#0a0f29]/80 backdrop-blur-xl border-b border-[#2d1b4e]"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        Bot Detection Predictor
-      </motion.h1>
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link 
+            href="/"
+            className="flex items-center space-x-2 text-[#00ffe5] hover:text-[#00e6cc] transition-colors"
+          >
+            <FiArrowLeft className="w-5 h-5" />
+            <span>Back to Home</span>
+          </Link>
+          
+          <div className="flex items-center space-x-4">
+            <Link 
+              href="https://github.com/captainsza/Bot_Profile_Detection"
+              target="_blank"
+              className="flex items-center space-x-2 text-gray-400 hover:text-[#00ffe5] transition-colors"
+            >
+              <FiGithub className="w-5 h-5" />
+              <span className="hidden sm:inline">GitHub</span>
+            </Link>
+            <Link 
+              href="/TechnicalDocumentation.html"
+              target="_blank"
+              className="flex items-center space-x-2 text-gray-400 hover:text-[#00ffe5] transition-colors"
+            >
+              <FiBook className="w-5 h-5" />
+              <span className="hidden sm:inline">Docs</span>
+            </Link>
+          </div>
+        </div>
+      </motion.header>
 
-      <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-8">
-        {/* ------------------- FORM SECTION ------------------- */}
-        <PredictionForm
-          formData={formData}
-          setFormData={setFormData}
-          handleSubmit={handleSubmit}
-          handleChange={handleChange}
-          username={username}
-          setUsername={setUsername}
-          fetchTwitterData={fetchTwitterData}
-          fetchingTwitter={fetchingTwitter}
-          loading={loading}
-        />
+      <main className="pt-24 pb-16 px-4 md:px-8">
+        <motion.h1
+          className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-[#00ffe5] to-[#4d8dff]"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          Bot Detection Predictor
+        </motion.h1>
 
-        {/* ------------------- RESULT SECTION ------------------- */}
-        <ResultSection
-          result={result}
-          loading={loading}
-          chartOptions={chartOptions}
-          chartSeries={chartSeries}
-          getExplanation={getExplanation}
-        />
-      </div>
+        <motion.p
+          className="text-center text-gray-400 max-w-2xl mx-auto mb-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          Analyze Twitter profiles using our advanced AI models to detect automated accounts.
+          Choose between our Traditional (XGBoost + BERT) or Improved Neural Network models.
+        </motion.p>
 
-      {errorMessage && (
-        <ErrorPopup
-          message={errorMessage}
-          onClose={() => setErrorMessage(null)}
-        />
-      )}
+        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
+          <PredictionForm
+            formData={formData}
+            setFormData={setFormData}
+            handleSubmit={handleSubmit}
+            handleChange={handleChange}
+            username={username}
+            setUsername={setUsername}
+            fetchTwitterData={fetchTwitterData}
+            fetchingTwitter={fetchingTwitter}
+            loading={loading}
+          />
 
-      {/* ------------------- FOOTER SECTION ------------------- */}
-      <footer className="w-full mt-16 border-t border-gray-800 pt-8 pb-4">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
+          <ResultSection
+            result={result}
+            loading={loading}
+            chartOptions={chartOptions}
+            chartSeries={chartSeries}
+            getExplanation={getExplanation}
+          />
+        </div>
+      </main>
+
+      <motion.footer 
+        className="border-t border-[#2d1b4e] bg-[#0a0f29]/80 backdrop-blur-xl"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex flex-wrap justify-center gap-6 mb-4">
             <Link
               href="https://qubitrules.com"
               target="_blank"
-              className="text-indigo-400 hover:text-indigo-300 transition-colors"
+              className="text-[#00ffe5] hover:text-[#00e6cc] transition-colors"
             >
               Visit QubitRules
             </Link>
             <Link
               href="https://github.com/captainsza/Bot_Profile_Detection"
               target="_blank"
-              className="text-indigo-400 hover:text-indigo-300 transition-colors"
+              className="text-[#00ffe5] hover:text-[#00e6cc] transition-colors"
             >
               GitHub Repository
             </Link>
             <Link
-              href="/TechnicalDocumentation.pdf"
+              href="/TechnicalDocumentation.html"
               target="_blank"
-              className="text-indigo-400 hover:text-indigo-300 transition-colors"
+              className="text-[#00ffe5] hover:text-[#00e6cc] transition-colors"
             >
               Technical Documentation
             </Link>
@@ -229,7 +262,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="flex items-center mt-4 space-x-2">
+          <div className="flex items-center justify-center mt-4 space-x-2">
             <Image
               src="/logo-removebg.png"
               alt="QubitRules Logo"
@@ -242,7 +275,14 @@ export default function Home() {
             </span>
           </div>
         </div>
-      </footer>
+      </motion.footer>
+
+      {errorMessage && (
+        <ErrorPopup
+          message={errorMessage}
+          onClose={() => setErrorMessage(null)}
+        />
+      )}
     </div>
   );
 }

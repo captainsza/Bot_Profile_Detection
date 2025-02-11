@@ -1,13 +1,150 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+    --secondary: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 40% 98%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --ring: 216 34% 17%;
+    --radius: 0.5rem;
+    /* Custom Colors */
+    --void: 224, 71%, 4%;
+    --cyberblue: 199, 89%, 48%;
+    --neon-cyan: 180, 100%, 50%;
+    --cyber-purple: 280, 75%, 60%;
+    --matrix-green: 135, 94%, 65%;
+}
+
+
+/* Base styles */
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    background-color: hsl(var(--void));
+    color: hsl(var(--foreground));
+    font-family: 'Inter', sans-serif;
+}
+
+
+/* Custom animations */
+
+@keyframes glow {
+    0%,
+    100% {
+        text-shadow: 0 0 10px hsl(var(--neon-cyan)), 0 0 20px hsl(var(--neon-cyan)), 0 0 30px hsl(var(--neon-cyan));
+    }
+    50% {
+        text-shadow: 0 0 20px hsl(var(--cyberblue)), 0 0 30px hsl(var(--cyberblue)), 0 0 40px hsl(var(--cyberblue));
+    }
+}
+
+.cyber-glow {
+    animation: glow 2s ease-in-out infinite;
+}
+
+
+/* Custom utility classes */
+
+.bg-cyber-gradient {
+    background: linear-gradient( 135deg, hsl(var(--cyberblue)) 0%, hsl(var(--cyber-purple)) 100%);
+}
+
+.text-cyber-gradient {
+    background: linear-gradient( to right, hsl(var(--neon-cyan)), hsl(var(--cyberblue)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+
+/* Custom Scrollbar */
+
+.scrollbar-thin {
+    scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.5);
+    border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #00ffe5;
+    border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #00e6cc;
+}
+
+
+/* Prevent content shift when scrollbar appears */
+
+@layer utilities {
+    .scrollbar-gutter {
+        scrollbar-gutter: stable;
+    }
 }
 
 @layer base {
-  :root {
-        --radius: 0.5rem;
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+
+/* Navigation Animations */
+
+@keyframes pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+.nav-dot-active {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+
+/* Smooth transitions */
+
+.section-indicator {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* Mobile optimizations */
+
+@media (max-width: 768px) {
+    .mobile-nav {
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
 }
