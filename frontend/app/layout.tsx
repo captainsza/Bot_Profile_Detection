@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: "Bot Detection System",
     images: [
       {
-        url: "/logo.png",
+        url: "https://empiresphere.vercel.app/api/files/67ac4f9be8351fb862fa9854/view?apiKey=emp_cbb0f91b-ae83-4fdc-a4e9-e1deb39ed9cc",
         width: 1200,
         height: 630,
         alt: "Bot Detection System Preview",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: "Bot Detection System | QubitRules",
     description: "Advanced AI-powered bot detection using XGBoost and BERT",
     creator: "@QubitRules",
-    images: ["/logo.png"],
+    images: ["https://empiresphere.vercel.app/api/files/67ac4f9be8351fb862fa9854/view?apiKey=emp_cbb0f91b-ae83-4fdc-a4e9-e1deb39ed9cc"],
   },
   viewport: {
     width: "device-width",
