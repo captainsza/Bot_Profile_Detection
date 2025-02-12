@@ -52,7 +52,7 @@ export default function Hero() {
         </motion.h1>
         
         <motion.p
-          className="text-xl mb-8 text-[#a0aec0]"
+          className="text-xl mb-8 text-[#f8f9fa]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 1 }}
@@ -85,7 +85,7 @@ export default function Hero() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1 }}
         >
-          <div className="text-[#a0aec0]">
+          <div className="text-[#ffffff]">
             <h3 className="text-xl font-semibold mb-2 text-[#00ffe5]">QubitRules Technologies</h3>
             <p className="text-sm">Empowering Digital Security Through Innovation</p>
             <Link 
@@ -99,13 +99,13 @@ export default function Hero() {
           </div>
 
           <div className="border-t border-gray-800 pt-4 mt-4">
-            <h4 className="text-gray-300 font-medium mb-2">Project Contributors</h4>
+            <h4 className="text-white font-medium mb-2">Project Contributors</h4>
             <div className="flex justify-center space-x-8">
               <Link 
                 href="https://github.com/captainsza" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-sm text-gray-400 hover:text-cyan-400 transition duration-300"
+                className="text-sm text-white hover:text-cyan-400 transition duration-300"
               >
                 <div className="flex flex-col items-center">
                   <img 
@@ -113,7 +113,22 @@ export default function Hero() {
                     alt="Captain SZA" 
                     className="w-10 h-10 rounded-full mb-2"
                   />
-                  <span>Captain SZA</span>
+                  <span>Zaid Ahmad</span>
+                </div>
+              </Link>
+              <Link 
+                href="https://github.com/newayanahmad" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-sm text-white hover:text-cyan-400 transition duration-300"
+              >
+                <div className="flex flex-col items-center">
+                  <img 
+                    src="https://github.com/newayanahmad.png" 
+                    alt="Latest Ayan" 
+                    className="w-10 h-10 rounded-full mb-2"
+                  />
+                  <span>Ayan Ahmad</span>
                 </div>
               </Link>
               {/* Add more team members here if needed */}
@@ -125,7 +140,7 @@ export default function Hero() {
             className="inline-block bg-gradient-to-r from-purple-900 to-indigo-900 p-3 rounded-lg"
             whileHover={{ scale: 1.05 }}
           >
-            <p className="text-xs text-gray-300">
+            <p className="text-xs text-white">
               Built with ❤️ for the <br/>
               <span className="font-semibold text-cyan-400">HACK IITK 2024-2025</span>
             </p>
