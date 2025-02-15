@@ -16,7 +16,7 @@ tf.keras.utils.disable_interactive_logging()
 from tensorflow.keras.models import load_model
 from tensorflow.keras.layers import Layer, Input, Dense, Dropout, Concatenate
 from tensorflow.keras.saving import register_keras_serializable
-from transformers import TFDistilBertModel, DistilBertTokenizerFast
+from transformers import TFDistilBertModel, DistilBertTokenizerFast, DistilBertTokenizer, DistilBertModel
 
 # Download VADER lexicon if not already available.
 nltk.download('vader_lexicon', quiet=True)
@@ -97,48 +97,6 @@ def count_hashtags(hashtag_str: str) -> int:
     return len([tag for tag in hashtags if tag != ""])
 
 # =============================================================================
-# OLD MODEL (joblib based ensemble) – Unchanged
-# =============================================================================
-def load_old_model():
-    base_path = os.path.join(os.path.dirname(__file__), "modal")
-    model_file = os.path.join(base_path, "bot_detection_model.pkl")
-    ensemble_model = joblib.load(model_file)
-    clf_pipeline = ensemble_model["clf_pipeline"]
-    iso_pipeline = ensemble_model["iso_pipeline"]
-    text_feature = ensemble_model["text_feature"]
-    numeric_features = ensemble_model["numeric_features"]
-    threshold = ensemble_model["threshold"]
-    return clf_pipeline, iso_pipeline, text_feature, numeric_features, threshold
-
-def predict_bot_old(account_data: dict) -> dict:
-    clf_pipeline, iso_pipeline, text_feature, numeric_features, threshold = load_old_model()
-    df = pd.DataFrame([account_data])
-    if "Tweet" not in df.columns:
-        df["Tweet"] = df.get("Clean_Tweet", "")
-    if "Hashtags" not in df.columns:
-        df["Hashtags"] = ""
-    if "Clean_Tweet" not in df.columns:
-        df["Clean_Tweet"] = df["Tweet"].apply(clean_text)
-    if "Tweet_Length" not in df.columns:
-        df["Tweet_Length"] = df["Tweet"].apply(lambda x: len(str(x).split()))
-    if "Hashtag_Count" not in df.columns:
-        df["Hashtag_Count"] = df["Hashtags"].apply(count_hashtags)
-    if "Sentiment" not in df.columns:
-        df["Sentiment"] = df["Clean_Tweet"].apply(lambda x: sid.polarity_scores(x)["compound"])
-    
-    features = df[[text_feature] + numeric_features]
-    lr_probability = clf_pipeline.predict_proba(features)[:, 1][0]
-    iso_prediction = iso_pipeline.predict(features[numeric_features])[0]
-    iso_prediction_binary = 1 if iso_prediction == -1 else 0
-    predicted_label = 1 if (lr_probability > threshold or iso_prediction_binary == 1) else 0
-    return {
-        "Predicted_Bot_Label": predicted_label,
-        "LR_Probability": lr_probability,
-        "Isolation_Forest_Pred": iso_prediction_binary,
-        "model_version": "old"
-    }
-
-# =============================================================================
 # IMPROVED MODEL (Keras) – Note: now load the scaler from "old_scaler.pkl" so that it is separate.
 # =============================================================================
 def load_improved_model():
@@ -216,37 +174,11 @@ def predict_bot_improved(account_data: dict) -> dict:
 # =============================================================================
 # NEW: TRADITIONAL2 MODEL (XGBoost + BERT embedding)
 # =============================================================================
-def load_model_and_scaler(model_version):
-    """Select and load the model and scaler based on version"""
-    base_path = os.path.join(os.path.dirname(__file__), "modal")
-    if model_version == "old":
-        model_file = os.path.join(base_path, "bot_detection_model.pkl")
-        ensemble_model = joblib.load(model_file)
-        return {
-            'clf_pipeline': ensemble_model["clf_pipeline"],
-            'iso_pipeline': ensemble_model["iso_pipeline"],
-            'threshold': ensemble_model["threshold"]
-        }
-    elif model_version == "traditional2":
-        return {
-            'scaler': joblib.load(os.path.join(base_path, "old_scaler.pkl")),
-            'model': joblib.load(os.path.join(base_path, "xgb_bot_detection_model.pkl")),
-            'threshold': 0.5  # Adjust threshold as needed
-        }
-    else:
-        return None
-
 def prepare_features_traditional2(account_data: dict, tokenizer, bert_model):
-    """
-    Prepare input features for the XGBoost traditional2 model:
-    - Compute BERT embedding for the cleaned tweet.
-    - Compute the numeric features: 
-      [Retweet Count, Mention Count, Follower Count, Verified, Tweet_Length, Hashtag_Count, FollowerPerRetweet]
-    """
     tweet = account_data.get("Tweet", "")
-    cleaned_tweet = account_data.get("Clean_Tweet", clean_text(tweet))
+    cleaned_tweet = clean_text(tweet)
     
-    # Tokenize and compute BERT embedding using mean pooling.
+    # Get BERT embeddings
     encoding = tokenizer(
         cleaned_tweet,
         truncation=True,
@@ -261,16 +193,15 @@ def prepare_features_traditional2(account_data: dict, tokenizer, bert_model):
     bert_model.eval()
     with torch.no_grad():
         outputs = bert_model(**encoding)
-        embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy()  # shape (1, 768)
+        embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy()
     
-    # Compute numeric features.
+    # Calculate numeric features
     retweet_count = float(account_data.get("Retweet Count", 0))
     mention_count = float(account_data.get("Mention Count", 0))
     follower_count = float(account_data.get("Follower Count", 0))
     verified = 1.0 if account_data.get("Verified", False) else 0.0
-    tweet_length = float(len(cleaned_tweet))
-    hashtag_str = account_data.get("Hashtags", "")
-    hashtag_count = float(count_hashtags(hashtag_str))
+    tweet_length = float(len(cleaned_tweet.split()))
+    hashtag_count = float(count_hashtags(account_data.get("Hashtags", "")))
     follower_per_retweet = follower_count / (retweet_count + 1.0)
     
     numeric_vector = np.array([
@@ -285,72 +216,50 @@ def prepare_features_traditional2(account_data: dict, tokenizer, bert_model):
     
     return embedding, numeric_vector
 
-def predict_bot_traditional(account_data: dict) -> dict:
-    """
-    Enhanced prediction function for traditional models.
-    For model_version "old", use the original pipeline.
-    For model_version "traditional2", use the XGBoost + BERT embedding approach.
-    """
-    model_version = account_data.get("model_version", "old")
-    models = load_model_and_scaler(model_version)
+def predict_bot_traditional2(account_data: dict) -> dict:
+    base_path = os.path.join(os.path.dirname(__file__), "modal")
     
-    if model_version == "old":
-        features = prepare_features(account_data)  # For the original ensemble model.
-        clf_prob = models['clf_pipeline'].predict_proba(features)[0][1]
-        iso_pred = models['iso_pipeline'].predict(features)[0]
-        iso_score = 1 if iso_pred == -1 else 0
-        is_bot = (clf_prob > models['threshold']) or (iso_score == 1 and clf_prob > 0.4)
-        return {
-            "Predicted_Bot_Label": int(is_bot),
-            "LR_Probability": float(clf_prob),
-            "Isolation_Forest_Pred": iso_score,
-            "model_version": "old"
-        }
-    elif model_version == "traditional2":
-        from transformers import DistilBertTokenizer, DistilBertModel
-        tokenizer_new = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
-        bert_model = DistilBertModel.from_pretrained('distilbert-base-uncased')
+    # Load models and scaler
+    try:
+        xgb_model = joblib.load(os.path.join(base_path, "xgb_bot_detection_model.pkl"))
+        scaler = joblib.load(os.path.join(base_path, "old_scaler.pkl"))
         
-        embedding, numeric_features = prepare_features_traditional2(account_data, tokenizer_new, bert_model)
-        numeric_features_scaled = models['scaler'].transform(numeric_features)
+        # Add error handling for tokenizer and model loading
+        try:
+            tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
+            bert_model = DistilBertModel.from_pretrained('distilbert-base-uncased')
+        except Exception as e:
+            print(f"Error loading BERT models: {str(e)}", file=sys.stderr)
+            raise
+        
+        # Get features
+        embedding, numeric_features = prepare_features_traditional2(account_data, tokenizer, bert_model)
+        numeric_features_scaled = scaler.transform(numeric_features)
         combined_features = np.concatenate((embedding, numeric_features_scaled), axis=1)
-        prob = models['model'].predict_proba(combined_features)[0][1]
+        
+        # Make prediction
+        prob = xgb_model.predict_proba(combined_features)[0][1]
+        threshold = 0.5
+        
         return {
-            "Predicted_Bot_Label": int(prob > models['threshold']),
+            "Predicted_Bot_Label": int(prob > threshold),
             "LR_Probability": float(prob),
-            "Isolation_Forest_Pred": None,
             "model_version": "traditional2"
         }
-    else:
-        raise ValueError("Unsupported model_version for traditional prediction.")
+    except Exception as e:
+        print(f"Error in predict_bot_traditional2: {str(e)}", file=sys.stderr)
+        raise
 
-def prepare_features(account_data: dict) -> np.ndarray:
-    """
-    Prepare feature vector for the OLD/traditional (non-XGB) model.
-    (This function is used only for the 'old' branch.)
-    """
-    features = [
-        account_data.get("Retweet Count", 0),
-        account_data.get("Mention Count", 0),
-        account_data.get("Follower Count", 0),
-        1 if account_data.get("Verified", False) else 0
-    ]
-    return np.array(features).reshape(1, -1)
-
-# =============================================================================
-# MAIN PREDICTION FUNCTION
-# =============================================================================
 def predict():
     try:
         data = sys.stdin.read()
         account_data = json.loads(data)
         
-        # Route to the appropriate model.
         if account_data.get("model_version") == "improved":
             result = predict_bot_improved(account_data)
         else:
-            # For both "old" and "traditional2", use predict_bot_traditional.
-            result = predict_bot_traditional(account_data)
+            # Default to traditional2 model
+            result = predict_bot_traditional2(account_data)
             
         print(json.dumps(result))
         sys.stdout.flush()

@@ -10,22 +10,93 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const ResultSkeleton = () => (
   <div className="flex flex-col items-center justify-center w-full h-full">
-    <div className="w-48 h-48 relative mb-6">
-      <Orb hue={180} hoverIntensity={0.6} rotateOnHover={false} forceHoverState={true} />
+    {/* Loading Orb with smoother animation */}
+    <div className="w-48 h-48 relative mb-6 opacity-50">
+      <motion.div
+        animate={{
+          opacity: [0.3, 0.6, 0.3],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        <Orb hue={180} hoverIntensity={0.4} rotateOnHover={false} forceHoverState={true} />
+      </motion.div>
     </div>
-    <div className="animate-pulse space-y-6 w-full">
-      <div className="h-8 bg-[#2d1b4e] rounded-lg w-3/4"></div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="h-24 bg-[#2d1b4e] rounded-lg"></div>
-        <div className="h-24 bg-[#2d1b4e] rounded-lg"></div>
+
+    {/* Skeleton Content with subtle pulse */}
+    <div className="w-full space-y-6">
+      {/* Title Skeleton */}
+      <div className="h-8 rounded-lg overflow-hidden">
+        <motion.div
+          className="w-full h-full bg-[#2d1b4e]/50"
+          animate={{
+            opacity: [0.4, 0.7, 0.4]
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
       </div>
-      <div className="h-[250px] bg-[#2d1b4e] rounded-lg"></div>
-      <div className="h-32 bg-[#2d1b4e] rounded-lg"></div>
+
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[1, 2].map((index) => (
+          <div key={index} className="h-24 rounded-lg overflow-hidden">
+            <motion.div
+              className="w-full h-full bg-[#2d1b4e]/50"
+              animate={{
+                opacity: [0.4, 0.7, 0.4]
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: index * 0.2
+              }}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Chart Area Skeleton */}
+      <div className="h-[250px] rounded-lg overflow-hidden">
+        <motion.div
+          className="w-full h-full bg-[#2d1b4e]/50"
+          animate={{
+            opacity: [0.4, 0.7, 0.4]
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.4
+          }}
+        />
+      </div>
+
+      {/* Description Skeleton */}
+      <div className="h-32 rounded-lg overflow-hidden">
+        <motion.div
+          className="w-full h-full bg-[#2d1b4e]/50"
+          animate={{
+            opacity: [0.4, 0.7, 0.4]
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.6
+          }}
+        />
+      </div>
     </div>
   </div>
 );
-
-
 
 type ResultSectionProps = {
   result: any;
