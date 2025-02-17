@@ -476,6 +476,9 @@ pm2 monit
 
 [![Visitor Count](https://api.visitorbadge.io/api/visitors?path=captainsza/Bot_Profile_Detection&countColor=%23fff&titleColor=%2379C83D)](https://github.com/captainsza/Bot_Profile_Detection)
 
+https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fcaptainsza%2FBot_Profile_Detection&label=Visitors&labelColor=%23555555&countColor=%23d9e3f0&labelStyle=upper
+
+
 
 ## 📫 Contact
 
