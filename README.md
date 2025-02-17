@@ -476,7 +476,12 @@ pm2 monit
 
 [![Visitor Count](https://api.visitorbadge.io/api/visitors?path=captainsza/Bot_Profile_Detection&countColor=%23fff&titleColor=%2379C83D)](https://github.com/captainsza/Bot_Profile_Detection)
 
-https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fcaptainsza%2FBot_Profile_Detection&label=Visitors&labelColor=%23555555&countColor=%23d9e3f0&labelStyle=upper
+# My Project
+
+🔍 **Repo Stats** (excluding my visits)  
+
+![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fcaptainsza%2FBot_Profile_Detection&label=Visitors&labelColor=%23555555&countColor=%23d9e3f0&labelStyle=upper)
+![GitHub clones](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/captainsza/Bot_Profile_Detection/traffic/clones&label=Clones%20(past%2014%20days)&query=count&color=blue)
 
 
 
