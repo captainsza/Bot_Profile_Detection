@@ -464,9 +464,6 @@ pm2 monit
 - Framer Motion
 - ApexCharts
 
-## 🌟 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=captainsza/Bot_Profile_Detection&type=Date)](https://star-history.com/#captainsza/Bot_Profile_Detection&Date)
 
 
 [![Visitor Count](https://api.visitorbadge.io/api/visitors?path=captainsza/Bot_Profile_Detection&countColor=%23fff&titleColor=%2379C83D)](https://github.com/captainsza/Bot_Profile_Detection)
