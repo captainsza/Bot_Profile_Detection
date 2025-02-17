@@ -468,11 +468,6 @@ pm2 monit
 
 [![Star History Chart](https://api.star-history.com/svg?repos=captainsza/Bot_Profile_Detection&type=Date)](https://star-history.com/#captainsza/Bot_Profile_Detection&Date)
 
-## 📸 Screenshots
-
-<div align="center">
-<img src="assets/Evaluation-advance-model.png" width="400"/> <img src="assets/1.png" width="400"/>
-</div>
 
 [![Visitor Count](https://api.visitorbadge.io/api/visitors?path=captainsza/Bot_Profile_Detection&countColor=%23fff&titleColor=%2379C83D)](https://github.com/captainsza/Bot_Profile_Detection)
 
