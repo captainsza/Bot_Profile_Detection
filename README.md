@@ -466,8 +466,6 @@ pm2 monit
 
 
 
-[![Visitor Count](https://api.visitorbadge.io/api/visitors?path=captainsza/Bot_Profile_Detection&countColor=%23fff&titleColor=%2379C83D)](https://github.com/captainsza/Bot_Profile_Detection)
-
 # My Project
 
 🔍 **Repo Stats** (excluding my visits)  
