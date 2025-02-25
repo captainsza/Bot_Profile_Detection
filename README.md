@@ -471,8 +471,6 @@ pm2 monit
 🔍 **Repo Stats** (excluding my visits)  
 
 ![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fcaptainsza%2FBot_Profile_Detection&label=Visitors&labelColor=%23555555&countColor=%23d9e3f0&labelStyle=upper)
-![GitHub clones](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/captainsza/Bot_Profile_Detection/traffic/clones&label=Clones%20(past%2014%20days)&query=count&color=blue)
-
 
 
 ## 📫 Contact
